@@ -44,6 +44,8 @@ class RootViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationItem.title = "Root"
+
         view.addSubview(tableView)
         setupDataSources()
     }

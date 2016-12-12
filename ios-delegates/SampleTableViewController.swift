@@ -42,6 +42,8 @@ class SampleTableViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        navigationItem.title = "TableView"
+
         view.addSubview(sampleTableView)
     }
 
