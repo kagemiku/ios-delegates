@@ -60,11 +60,7 @@ class RootViewController: UIViewController {
     }
 
     private func setupDataSources() {
-        dataSources.append(DataSource(title: NSStringFromClass(UIViewController.self), toVC: UIViewController()))
-        dataSources.append(DataSource(title: NSStringFromClass(UIViewController.self), toVC: UIViewController()))
-        dataSources.append(DataSource(title: NSStringFromClass(UIViewController.self), toVC: UIViewController()))
-        dataSources.append(DataSource(title: NSStringFromClass(UIViewController.self), toVC: UIViewController()))
-        dataSources.append(DataSource(title: NSStringFromClass(UIViewController.self), toVC: UIViewController()))
+        dataSources.append(DataSource(title: NSStringFromClass(SampleTableViewController.self), toVC: SampleTableViewController()))
     }
 }
 
