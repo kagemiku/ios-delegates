@@ -9,7 +9,7 @@
 import UIKit
 
 class RootViewController: UIViewController {
-    fileprivate class DataSource {
+    fileprivate struct DataSource {
         var title: String
         var toVC: UIViewController
 
