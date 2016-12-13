@@ -26,14 +26,14 @@ class SampleTableViewController: UIViewController {
     }
 
     fileprivate lazy var sampleTableView: UITableView = {
-        let tableView = UITableView(frame: self.view.frame)
+        let tableView = UITableView(frame: self.view.frame, style: .grouped)
         tableView.delegate   = self
         tableView.dataSource = self
         tableView.register(SampleTableViewCell.self, forCellReuseIdentifier: SampleTableViewCell.identifier)
         return tableView
     }()
 
-    fileprivate var dataSources = [DataSource]() {
+    fileprivate var dataSources = [[DataSource]]() {
         didSet {
             sampleTableView.reloadData()
         }
@@ -60,8 +60,12 @@ class SampleTableViewController: UIViewController {
     }
 
     private func setupDataSources() {
-        for i in 0 ..< 10 {
-            dataSources.append(DataSource(title: String(i)))
+        for section in 0 ..< 5 {
+            var rowDataSources = [DataSource]()
+            for row in 0 ..< 10 {
+                rowDataSources.append(DataSource(title: "\(section) - \(row)"))
+            }
+            dataSources.append(rowDataSources)
         }
     }
 }
@@ -72,52 +76,59 @@ extension SampleTableViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: SampleTableViewCell.identifier, for: indexPath)
         if let cell = cell as? SampleTableViewCell {
-            cell.configure(dataSource: dataSources[indexPath.row])
+            cell.configure(dataSource: dataSources[indexPath.section][indexPath.row])
         }
 
         return cell
     }
 
     func numberOfSections(in tableView: UITableView) -> Int {
-        return 1
-    }
-
-    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return dataSources.count
     }
 
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+        return dataSources[section].count
+    }
+
     func sectionIndexTitles(for tableView: UITableView) -> [String]? {
-        return nil
+        var titles = [String]()
+        for section in 0 ..< dataSources.count {
+            titles.append("s: \(section)")
+        }
+
+        return titles
     }
 
     func tableView(_ tableView: UITableView, sectionForSectionIndexTitle title: String, at index: Int) -> Int {
-        return 1
+        return index
     }
 
     func tableView(_ tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
-        return nil
+        return "header for section: \(section)"
     }
 
     func tableView(_ tableView: UITableView, titleForFooterInSection section: Int) -> String? {
-        return nil
+        return "footer for section: \(section)"
     }
 
     // MARK: - Inserting or Deleting Table Rows
 
     func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCellEditingStyle, forRowAt indexPath: IndexPath) {
+        print("\(editingStyle), \(indexPath)")
     }
 
     func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
-        return false
+        return true
     }
 
     // MARK: - Reordering Table Rows
 
     func tableView(_ tableView: UITableView, canMoveRowAt indexPath: IndexPath) -> Bool {
-        return false
+        return true
     }
 
     func tableView(_ tableView: UITableView, moveRowAt sourceIndexPath: IndexPath, to destinationIndexPath: IndexPath) {
+        print("\(sourceIndexPath), \(destinationIndexPath)")
     }
 }
 
@@ -135,17 +146,28 @@ extension SampleTableViewController: UITableViewDelegate {
 
 
     func tableView(_ tableView: UITableView, indentationLevelForRowAt indexPath: IndexPath) -> Int {
-        return 0
+        return indexPath.section
     }
 
 
     func tableView(_ tableView: UITableView, willDisplay cell: UITableViewCell, forRowAt indexPath: IndexPath) {
+        print("willDispaly")
     }
 
     // MARK: - Managing Accessory Views
 
     func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        return nil
+        let rowAction1 = UITableViewRowAction(style: .default, title: "default") {
+            print("\($1)'s \($0) is performed")
+        }
+        let rowAction2 = UITableViewRowAction(style: .normal, title: "normal") {
+            print("\($1)'s \($0) is performed")
+        }
+        let rowAction3 = UITableViewRowAction(style: .destructive, title: "destructive") {
+            print("\($1)'s \($0) is performed")
+        }
+
+        return [rowAction1, rowAction2, rowAction3]
     }
 
     func tableView(_ tableView: UITableView, accessoryButtonTappedForRowWith indexPath: IndexPath) {
@@ -208,7 +230,7 @@ extension SampleTableViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCellEditingStyle {
-        return .none
+        return .delete
     }
 
     func tableView(_ tableView: UITableView, titleForDeleteConfirmationButtonForRowAt indexPath: IndexPath) -> String? {
@@ -216,7 +238,7 @@ extension SampleTableViewController: UITableViewDelegate {
     }
 
     func tableView(_ tableView: UITableView, shouldIndentWhileEditingRowAt indexPath: IndexPath) -> Bool {
-        return false
+        return true
     }
 
     // MARK: - Reordering Table Rows
@@ -239,11 +261,11 @@ extension SampleTableViewController: UITableViewDelegate {
     // MARK: - Copying and Pasting Row Content
 
     func tableView(_ tableView: UITableView, shouldShowMenuForRowAt indexPath: IndexPath) -> Bool {
-        return false
+        return true
     }
 
     func tableView(_ tableView: UITableView, canPerformAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) -> Bool {
-        return false
+        return true
     }
 
     func tableView(_ tableView: UITableView, performAction action: Selector, forRowAt indexPath: IndexPath, withSender sender: Any?) {
@@ -264,11 +286,11 @@ extension SampleTableViewController: UITableViewDelegate {
     // MARK: - Managing Table View Focus
 
     func tableView(_ tableView: UITableView, canFocusRowAt indexPath: IndexPath) -> Bool {
-        return false
+        return true
     }
 
     func tableView(_ tableView: UITableView, shouldUpdateFocusIn context: UITableViewFocusUpdateContext) -> Bool {
-        return false
+        return true
     }
 
     func tableView(_ tableView: UITableView, didUpdateFocusIn context: UITableViewFocusUpdateContext, with coordinator: UIFocusAnimationCoordinator) {
