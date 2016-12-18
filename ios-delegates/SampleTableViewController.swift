@@ -22,6 +22,7 @@ class SampleTableViewController: UIViewController {
 
         func configure(dataSource: DataSource) {
             textLabel?.text = dataSource.title
+            accessoryType   = .detailButton
         }
     }
 
@@ -43,6 +44,7 @@ class SampleTableViewController: UIViewController {
         super.viewDidLoad()
 
         navigationItem.title = "TableView"
+        navigationItem.rightBarButtonItem = editButtonItem
 
         view.addSubview(sampleTableView)
         setupDataSources()
@@ -57,6 +59,11 @@ class SampleTableViewController: UIViewController {
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
+    }
+
+    override func setEditing(_ editing: Bool, animated: Bool) {
+        super.setEditing(editing, animated: animated)
+        sampleTableView.isEditing = editing
     }
 
     private func setupDataSources() {
